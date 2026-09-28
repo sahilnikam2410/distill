@@ -60,4 +60,5 @@ Fixtures may contain planted bugs on purpose. They are excluded from lint and te
 2. Move "Unreleased" entries in `CHANGELOG.md` under the new version.
 3. Run `python scripts/build_skill.py`, commit, then tag and push:
    `git tag v1.1.0 && git push origin v1.1.0`. The release workflow attaches
-   `distill.skill` to the GitHub release.
+   `distill.skill` to the GitHub release. A release created on github.com
+   works too: the workflow attaches `distill.skill` to it.

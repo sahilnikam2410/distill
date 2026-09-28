@@ -1,83 +1,161 @@
+<div align="center">
+
 # distill
+
+**Make Claude answer like a senior engineer: short, exact, professional.**
+
+A skill for Claude Code and claude.ai that cuts **67% of output tokens** on our benchmark,<br>
+keeps every answer correct, and never talks like a caveman.
 
 [![CI](https://github.com/sahilnikam2410/distill/actions/workflows/ci.yml/badge.svg)](https://github.com/sahilnikam2410/distill/actions/workflows/ci.yml)
 [![Version](https://img.shields.io/badge/version-1.0.0-blue)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757)](#install)
 
-**A professional low-token mode for Claude.** Shorter answers, less tool churn, and still exact.
+[Install](#install) · [Before and after](#before-and-after) · [Benchmark](#benchmark) · [Levels](#levels) · [FAQ](#faq)
 
-![Benchmark: distill 543 tokens vs caveman 897 vs no skill 1,649](benchmark/benchmark.png)
+<img src="benchmark/benchmark.svg" alt="Output tokens across 3 tasks: no skill 1,649, caveman 897 (−46%), distill 543 (−67%)" width="720">
 
-Popular "talk like a caveman" skills save tokens but read badly in a work chat ("Effect run twice"). They also only shorten the *words*, not the *work*: file reads, tool calls and log dumps.
+</div>
 
-distill keeps replies professional and dense, and it also trims how Claude works.
+## Why
 
-| | No skill | caveman | **distill** |
-|---|---|---|---|
-| Tokens across 3 tasks | 1,649 | 897 (−46%) | **543 (−67%)** |
-| Correct answers | 3/3 | 3/3 | **3/3** |
-| Tool calls on the bug-fix task | 6 | 4 | **4** |
-| Tone | normal | broken grammar | professional |
+Claude's default answers are thorough, which is great until you are reading your fourth "Great question!" of the hour, scrolling past a recap of what it just did, or burning through a usage cap.
 
-## What it does
+"Talk like a caveman" skills fix the length but break the tone ("Effect run twice. Not bug."), and they only shorten the *words*. The *work* — file reads, tool calls, log dumps — stays as expensive as before.
 
-- **Answer on line 1.** No preamble, no recap, no "let me know if…"
-- **Word budget per answer type:** simple fact ≤ 25 words, bug or concept ≤ 60, task report ≤ 40
-- **Answer shapes:** Bug → `Cause / Fix / Verify` · Task → `Fixed / Tests / Open` · Decision → `Use X / Because / Tradeoff`
-- **One recommended path**, not a survey of options
-- **Work rules:** search before reading, run independent steps in parallel, no re-reads, filter tool output, stop at done
-- **Accuracy guard:** never shortens code, commands, paths, error messages, numbers or negations ("not", "unless"). Switches to full clarity for security warnings and irreversible actions
-- **Anything you ship stays full quality:** code, commits, PRs, docs and emails
+distill fixes both:
 
-## Levels
+- **Replies** lead with the answer, stay inside a word budget, and use grammatical, labeled fragments a colleague would write.
+- **Work** gets leaner too: search before reading, parallel tool calls, no re-reads, filtered output, stop when done.
+- **Accuracy is protected.** Code, commands, paths, error messages, numbers and negations are never shortened. Security warnings and irreversible actions switch to full sentences.
 
-| Level | Style |
-|---|---|
-| `lite` | Full sentences, zero filler |
-| `pro` | Labeled fragments ("Cause: … Fix: …"). Default |
-| `max` | Symbols, arrows, tables, one-word answers |
-| `auto` | Picks per reply (default) |
-| `wenyan-lite` / `wenyan` / `wenyan-max` | Classical Chinese. Code and identifiers stay in English |
+## Before and after
 
-Switch with `/distill pro`, `/distill max` and so on. Say "stop distill" to turn it off.
+Same prompts. These are the saved replies from the benchmark ([`benchmark/results/`](benchmark/results)).
+
+**Prompt:** *"my useEffect runs twice when the component mounts in dev mode, why?? and how do i stop it. react 18 + vite"*
+
+| | Reply opens with | Tokens |
+|---|---|---|
+| No skill | "This is expected, and it's caused by **React 18's `<StrictMode>`**, not by Vite or a bug in your code. ## Why it happens …" | 1,148 |
+| caveman | "Not bug. Usually not need stop. Fix effect instead: add cleanup." | 551 |
+| **distill** | "Cause: `<StrictMode>` in `main.jsx`. In dev only, React 18 mounts → unmounts → remounts every component to expose effects that lack cleanup." | **299** |
+
+**Prompt:** *"tests are failing in the shop project, coupon totals are wrong. find the bug and fix it"* (an agentic task in a small repo with a planted bug). The full distill reply:
+
+````markdown
+Fixed: tax was applied to the full subtotal instead of the discounted amount (`cart.py:20-21`).
+
+```diff
+-    taxed = sub * (1 + TAX_RATE)
+-    return money(taxed - disc)
++    taxed = (sub - disc) * (1 + TAX_RATE)
++    return money(taxed)
+```
+
+Tests: 3/3 pass (`python -m unittest discover -s tests`).
+````
 
 ## Install
 
-**Claude Code: plugin**
+**Claude Code (plugin, recommended)**
+
 ```
 /plugin marketplace add sahilnikam2410/distill
 /plugin install distill@distill
 ```
 
-**Claude Code: manual.** Copy `plugins/distill/skills/distill/` to `~/.claude/skills/distill/`.
+**Claude Code (manual):** copy `plugins/distill/skills/distill/` to `~/.claude/skills/distill/`.
 
 **claude.ai / Claude desktop:** download `distill.skill` from the [latest release](https://github.com/sahilnikam2410/distill/releases/latest) (or [from `main`](distill.skill)) and upload it in your Skills settings.
 
-Then type `/distill`, or just say "be brief" or "less tokens".
+Then type `/distill`, or just say "be brief", "less tokens" or "no fluff". Say "stop distill" to turn it off.
 
-## Measure your own savings
+## What it does
+
+| Rule | Effect |
+|---|---|
+| **Answer on line 1** | No preamble, no recap, no "let me know if…" |
+| **Word budget** | Simple fact ≤ 25 words · bug or concept ≤ 60 · task report ≤ 40 (code excluded) |
+| **Answer shapes** | Bug → `Cause / Fix / Verify` · Task → `Fixed / Tests / Open` · Decision → `Use X / Because / Tradeoff` |
+| **One path** | The recommended fix, not a survey of options |
+| **Lean work** | Search before reading, parallel tool calls, no re-reads, filtered output, stop at done |
+| **Accuracy guard** | Code, commands, paths, errors, numbers and negations ("not", "unless") stay exact |
+| **Shipped work stays full quality** | Code, commit messages, PR descriptions, docs and emails are written normally |
+
+## Levels
+
+| Level | Style | Example: *"Why does my component re-render every time?"* |
+|---|---|---|
+| `lite` | Full sentences, zero filler | For beginners, stakeholders, teaching |
+| `pro` | Labeled fragments. Default | "Inline object prop → new reference each render → child re-renders. Wrap it in `useMemo`, or move it outside the component if static." |
+| `max` | Symbols, arrows, one-word answers | "Inline obj prop = new ref/render. `useMemo` it." |
+| `auto` | Picks per reply (default) | Uses `lite` for risky steps or when you seem confused |
+| `wenyan-lite` / `wenyan` / `wenyan-max` | Classical Chinese; code stays in English | "新參照→重繪。`useMemo`。" |
+
+Switch with `/distill pro`, `/distill max` and so on.
+
+## Benchmark
+
+Three tasks, each run three ways. Every reply was correct in all three modes.
+
+| Task | No skill | caveman | distill |
+|---|---|---|---|
+| `eval-0-react-strictmode` | 1,148 | 551 | 299 |
+| `eval-1-mutable-default` | 311 | 199 | 142 |
+| `eval-2-shop-fix-agentic` | 190 | 147 | 102 |
+| **Total** | **1,649** | **897** (−46%) | **543** (−67%) |
+
+On the agentic task, distill used 4 tool calls, the same as caveman and 2 fewer than no skill (6).
+
+**Reproduce:**
+
+```bash
+python benchmark/score.py            # recomputes this table from benchmark/results/
+python benchmark/score.py --svg benchmark/benchmark.svg
+```
+
+**Limits, stated plainly:** 3 tasks is a small sample. Token counts are estimates from the bundled [`token_meter.py`](plugins/distill/skills/distill/scripts/token_meter.py) heuristic (install `tiktoken` for a closer proxy). Prompts and expected answers are in [`benchmark/tasks/evals.json`](benchmark/tasks/evals.json). More tasks are the most wanted contribution.
+
+### Measure your own savings
 
 ```bash
 python plugins/distill/skills/distill/scripts/token_meter.py before.txt after.txt
 ```
-It uses `tiktoken` if installed, otherwise a close heuristic with no dependencies.
 
-## Benchmark method (and its limits)
+## FAQ
 
-- 3 tasks: a React question, a Python bug, and a multi-file bug fix in a small project with a planted bug (`benchmark/tasks/`)
-- Each task was run 3 ways: no skill, caveman, distill. The raw answers are in `benchmark/results/`
-- Token counts are **estimates** from `token_meter.py`
-- It's a small sample. PRs with more tasks are welcome
+**Doesn't the skill itself cost tokens?**
+`SKILL.md` is about 2.4k tokens of *input*, loaded once per session when the skill triggers. The savings are *output* tokens, repeated on every reply, and output tokens are priced several times higher than input. In a session of more than a few replies it comes out ahead.
+
+**Will it make Claude skip important details?**
+The accuracy guard forbids shortening code, paths, errors, numbers, negations and caveats that change what you do. Each reply also runs a self-check: "can the reader act without a follow-up question?" If not, the missing fact is added back.
+
+**How is this different from caveman?**
+Same goal, different voice and scope. caveman shortens words and drops grammar. distill keeps grammatical, professional fragments and also trims tool use. On the benchmark it used 39% fewer tokens than caveman.
+
+**Does it change my code or commit messages?**
+No. Anything you ship (code, commits, PRs, docs, emails) is written at normal quality.
+
+**Does it work in languages other than English?**
+Yes. It replies in your language and compresses in that language. The wenyan levels reply in classical Chinese.
 
 ## Contributing
 
-Bug reports with the prompt and reply, and new benchmark tasks, are the most useful help. See [CONTRIBUTING.md](CONTRIBUTING.md) for the layout, checks and release steps, and [CHANGELOG.md](CHANGELOG.md) for history.
+Bug reports with the prompt and reply, and new benchmark tasks, help the most. See [CONTRIBUTING.md](CONTRIBUTING.md) for the layout, checks and release steps, and [CHANGELOG.md](CHANGELOG.md) for history.
 
 ```bash
 pip install pytest ruff
 ruff check . && pytest
 python scripts/build_skill.py   # rebuild distill.skill after editing the skill
 ```
+
+If distill saves you tokens, a ⭐ helps other people find it.
+
+## Star history
+
+[![Star history chart](https://api.star-history.com/svg?repos=sahilnikam2410/distill&type=Date)](https://star-history.com/#sahilnikam2410/distill&Date)
 
 ## License
 

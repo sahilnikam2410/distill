@@ -13,7 +13,7 @@ contribution; new benchmark tasks are next.
 | `.claude-plugin/marketplace.json` | Marketplace manifest, so `/plugin marketplace add` works. |
 | `distill.skill` | Zip bundle for claude.ai uploads. Generated; do not edit by hand. |
 | `scripts/build_skill.py` | Rebuilds `distill.skill`. |
-| `benchmark/` | Tasks, fixtures and raw results behind the README numbers. |
+| `benchmark/` | Tasks, fixtures and raw results behind the README numbers. `score.py` recomputes them. |
 | `tests/` | pytest suite. |
 
 ## Setup
@@ -47,7 +47,9 @@ CI runs the same checks and fails if `distill.skill` is out of date.
    the expected answer. Put any project files under `benchmark/tasks/fixtures/`.
 2. Run the task three ways (no skill, caveman, distill) and save each reply to
    `benchmark/results/eval-<id>-<slug>/{no_skill,caveman,distill}.md`.
-3. Count tokens with `token_meter.py` and update the README table.
+3. Run `python benchmark/score.py --svg benchmark/benchmark.svg`, paste the printed
+   table into the README's Benchmark section and commit the new chart. Tests fail
+   until both match the results.
 
 Fixtures may contain planted bugs on purpose. They are excluded from lint and tests.
 

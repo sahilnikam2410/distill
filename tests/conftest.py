@@ -25,3 +25,10 @@ def meter(monkeypatch):
 @pytest.fixture
 def build_skill():
     return _load("build_skill", ROOT / "scripts" / "build_skill.py")
+
+
+@pytest.fixture
+def bench(meter):
+    module = _load("score", ROOT / "benchmark" / "score.py")
+    module.load_meter = lambda: meter
+    return module

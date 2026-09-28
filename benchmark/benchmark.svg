@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="220" viewBox="0 0 720 220" role="img" aria-label="Output tokens across 3 benchmark modes">
+<style>
+text{font:600 15px -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;fill:#1f2328}
+.muted{font-weight:400;fill:#59636e}.title{font-size:17px}
+.bar{fill:#d0d7de}.hero{fill:#1f6feb}
+@media (prefers-color-scheme:dark){text{fill:#e6edf3}.muted{fill:#9198a1}.bar{fill:#3d444d}.hero{fill:#4493f8}}
+</style>
+<text class="title" x="0" y="24">Output tokens across the 3 benchmark tasks<tspan class="muted"> (lower is better)</tspan></text>
+<text x="0" y="78.0">No skill</text>
+<rect class="bar" x="110" y="56" width="460" height="34" rx="6"/>
+<text x="580" y="78.0">1,649<tspan class="muted">  baseline</tspan></text>
+<text x="0" y="130.0">caveman</text>
+<rect class="bar" x="110" y="108" width="250" height="34" rx="6"/>
+<text x="370" y="130.0">897<tspan class="muted">  −46% tokens</tspan></text>
+<text x="0" y="182.0">distill</text>
+<rect class="hero" x="110" y="160" width="151" height="34" rx="6"/>
+<text x="271" y="182.0">543<tspan class="muted">  −67% tokens</tspan></text>
+</svg>

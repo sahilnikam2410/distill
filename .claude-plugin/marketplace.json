@@ -3,6 +3,10 @@
   "owner": {
     "name": "Sahil Nikam"
   },
+  "metadata": {
+    "description": "distill: a professional low-token mode for Claude (a benchmarked alternative to caveman).",
+    "version": "1.0.0"
+  },
   "plugins": [
     {
       "name": "distill",

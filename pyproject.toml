@@ -2,7 +2,8 @@
 [tool.ruff]
 target-version = "py39"
 line-length = 100
-extend-exclude = ["benchmark/tasks/fixtures"]
+# Fixtures hold planted bugs; results are saved model replies and must stay verbatim.
+extend-exclude = ["benchmark/tasks/fixtures", "benchmark/results"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP"]

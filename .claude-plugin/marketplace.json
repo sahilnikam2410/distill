@@ -1,0 +1,13 @@
+{
+  "name": "distill",
+  "owner": {
+    "name": "Sahil Nikam"
+  },
+  "plugins": [
+    {
+      "name": "distill",
+      "source": "./plugins/distill",
+      "description": "Professional low-token mode for Claude. Cuts reply and tool-use tokens while keeping code, paths, errors, numbers and warnings exact."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "skill_name": "lean",
+  "evals": [
+    {"id": 0, "prompt": "my useEffect runs twice when the component mounts in dev mode, why?? and how do i stop it. react 18 + vite", "expected_output": "Explains React 18 StrictMode double-invokes effects in dev only; fix = cleanup function / idempotent effect, not removing StrictMode blindly; prod runs once.", "files": []},
+    {"id": 1, "prompt": "why does this keep adding old items?\n\n```python\ndef add_tag(tag, tags=[]):\n    tags.append(tag)\n    return tags\n\nprint(add_tag('a'))\nprint(add_tag('b'))  # expected ['b'] got ['a','b']\n```", "expected_output": "Mutable default argument evaluated once at def time; fix with tags=None then tags = [] if None.", "files": []},
+    {"id": 2, "prompt": "tests are failing in the shop project, coupon totals are wrong. find the bug and fix it", "expected_output": "Fixes cart.total to tax the discounted amount: (sub - disc) * (1 + TAX_RATE); all 3 tests pass.", "files": ["fixtures/shop"]}
+  ]
+}

@@ -1,5 +1,9 @@
 # distill
 
+[![CI](https://github.com/sahilnikam2410/distill/actions/workflows/ci.yml/badge.svg)](https://github.com/sahilnikam2410/distill/actions/workflows/ci.yml)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)](CHANGELOG.md)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 **A professional low-token mode for Claude.** Shorter answers, less tool churn, and still exact.
 
 ![Benchmark: distill 543 tokens vs caveman 897 vs no skill 1,649](benchmark/benchmark.png)
@@ -47,7 +51,7 @@ Switch with `/distill pro`, `/distill max` and so on. Say "stop distill" to turn
 
 **Claude Code: manual.** Copy `plugins/distill/skills/distill/` to `~/.claude/skills/distill/`.
 
-**claude.ai / Claude desktop:** download [`distill.skill`](distill.skill) and upload it in your Skills settings.
+**claude.ai / Claude desktop:** download `distill.skill` from the [latest release](https://github.com/sahilnikam2410/distill/releases/latest) (or [from `main`](distill.skill)) and upload it in your Skills settings.
 
 Then type `/distill`, or just say "be brief" or "less tokens".
 
@@ -64,6 +68,16 @@ It uses `tiktoken` if installed, otherwise a close heuristic with no dependencie
 - Each task was run 3 ways: no skill, caveman, distill. The raw answers are in `benchmark/results/`
 - Token counts are **estimates** from `token_meter.py`
 - It's a small sample. PRs with more tasks are welcome
+
+## Contributing
+
+Bug reports with the prompt and reply, and new benchmark tasks, are the most useful help. See [CONTRIBUTING.md](CONTRIBUTING.md) for the layout, checks and release steps, and [CHANGELOG.md](CHANGELOG.md) for history.
+
+```bash
+pip install pytest ruff
+ruff check . && pytest
+python scripts/build_skill.py   # rebuild distill.skill after editing the skill
+```
 
 ## License
 

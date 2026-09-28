@@ -1,0 +1,12 @@
+# Tooling config only; this repo is not a Python package.
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+extend-exclude = ["benchmark/tasks/fixtures"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

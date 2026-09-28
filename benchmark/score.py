@@ -60,7 +60,7 @@ def table(tasks, totals):
     return "\n".join(rows)
 
 
-def svg(totals):
+def svg(totals, n_tasks):
     """Horizontal bar chart that follows the viewer's light/dark theme."""
     width, left, right, bar_h, gap, top = 720, 110, 150, 34, 18, 56
     height = top + len(MODES) * (bar_h + gap) + 8
@@ -79,7 +79,7 @@ def svg(totals):
         "@media (prefers-color-scheme:dark){text{fill:#e6edf3}.muted{fill:#9198a1}"
         ".bar{fill:#3d444d}.hero{fill:#4493f8}}",
         "</style>",
-        '<text class="title" x="0" y="24">Output tokens across the 3 benchmark tasks'
+        f'<text class="title" x="0" y="24">Output tokens across {n_tasks} benchmark tasks'
         '<tspan class="muted"> (lower is better)</tspan></text>',
     ]
     for i, mode in enumerate(MODES):
@@ -106,7 +106,7 @@ def main(argv=None):
     print(table(tasks, totals))
     print(f"\n[{method}]")
     if args.svg:
-        args.svg.write_text(svg(totals), encoding="utf-8")
+        args.svg.write_text(svg(totals, len(tasks)), encoding="utf-8")
         print(f"wrote {args.svg}")
     return 0
 

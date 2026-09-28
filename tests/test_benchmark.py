@@ -10,10 +10,10 @@ def test_readme_table_matches_results(bench):
 
 
 def test_chart_matches_results(bench):
-    _, totals, _ = bench.score()
+    tasks, totals, _ = bench.score()
     chart = (ROOT / "benchmark" / "benchmark.svg").read_text(encoding="utf-8")
     hint = "run: python benchmark/score.py --svg benchmark/benchmark.svg"
-    assert chart == bench.svg(totals), hint
+    assert chart == bench.svg(totals, len(tasks)), hint
 
 
 def test_every_task_has_all_modes():

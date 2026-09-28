@@ -6,7 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-28
+
 ### Added
+- Benchmark grows from 3 to 8 tasks: a risky git undo, an async JS bug, a Docker
+  networking bug, a merge-vs-rebase decision and a second agentic fix
+  (`fixtures/paging`). distill: −62% output tokens vs no skill, −41% vs caveman,
+  shortest on every task, 8/8 correct. Method in `benchmark/README.md`.
 - CI: lint (ruff), tests on Python 3.9 and 3.13, a tiktoken smoke test, and a
   check that `distill.skill` matches the plugin source.
 - Release workflow: pushing a `vX.Y.Z` tag publishes a GitHub release with

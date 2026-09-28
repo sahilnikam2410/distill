@@ -4,17 +4,17 @@
 
 **Make Claude answer like a senior engineer: short, exact, professional.**
 
-A skill for Claude Code and claude.ai that cuts **67% of output tokens** on our benchmark,<br>
+A skill for Claude Code and claude.ai that cuts **62% of output tokens** on an 8-task benchmark,<br>
 keeps every answer correct, and never talks like a caveman.
 
 [![CI](https://github.com/sahilnikam2410/distill/actions/workflows/ci.yml/badge.svg)](https://github.com/sahilnikam2410/distill/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757)](#install)
 
 [Install](#install) · [Before and after](#before-and-after) · [Benchmark](#benchmark) · [Levels](#levels) · [FAQ](#faq)
 
-<img src="benchmark/benchmark.svg" alt="Output tokens across 3 tasks: no skill 1,649, caveman 897 (−46%), distill 543 (−67%)" width="720">
+<img src="benchmark/benchmark.svg" alt="Output tokens across 8 tasks: no skill 4,006, caveman 2,594 (−35%), distill 1,539 (−62%)" width="720">
 
 </div>
 
@@ -27,7 +27,7 @@ Claude's default answers are thorough, which is great until you are reading your
 distill fixes both:
 
 - **Replies** lead with the answer, stay inside a word budget, and use grammatical, labeled fragments a colleague would write.
-- **Work** gets leaner too: search before reading, parallel tool calls, no re-reads, filtered output, stop when done.
+- **Work** follows lean rules too: search before reading, parallel tool calls, no re-reads, filtered output, stop when done.
 - **Accuracy is protected.** Code, commands, paths, error messages, numbers and negations are never shortened. Security warnings and irreversible actions switch to full sentences.
 
 ## Before and after
@@ -98,16 +98,21 @@ Switch with `/distill pro`, `/distill max` and so on.
 
 ## Benchmark
 
-Three tasks, each run three ways. Every reply was correct in all three modes.
+Eight tasks (questions, debugging, a risky git operation, a design decision and two agentic bug fixes), each run three ways. Every reply was correct in all three modes, and distill was the shortest on every task. Method and grading: [`benchmark/README.md`](benchmark/README.md).
 
 | Task | No skill | caveman | distill |
 |---|---|---|---|
 | `eval-0-react-strictmode` | 1,148 | 551 | 299 |
 | `eval-1-mutable-default` | 311 | 199 | 142 |
 | `eval-2-shop-fix-agentic` | 190 | 147 | 102 |
-| **Total** | **1,649** | **897** (−46%) | **543** (−67%) |
+| `eval-3-git-undo-pushed` | 431 | 346 | 293 |
+| `eval-4-async-foreach` | 365 | 263 | 170 |
+| `eval-5-docker-localhost` | 617 | 339 | 208 |
+| `eval-6-merge-vs-rebase` | 618 | 447 | 191 |
+| `eval-7-paging-fix-agentic` | 326 | 302 | 134 |
+| **Total** | **4,006** | **2,594** (−35%) | **1,539** (−62%) |
 
-On the agentic task, distill used 4 tool calls, the same as caveman and 2 fewer than no skill (6).
+Tool calls on the agentic tasks: `eval-2` no skill 6, caveman 4, distill 4; `eval-7` no skill 3, caveman 2, distill 4 (distill re-ran the tests to verify its fix). Fewer words does not always mean fewer tool calls.
 
 **Reproduce:**
 
@@ -116,7 +121,7 @@ python benchmark/score.py            # recomputes this table from benchmark/resu
 python benchmark/score.py --svg benchmark/benchmark.svg
 ```
 
-**Limits, stated plainly:** 3 tasks is a small sample. Token counts are estimates from the bundled [`token_meter.py`](plugins/distill/skills/distill/scripts/token_meter.py) heuristic (install `tiktoken` for a closer proxy). Prompts and expected answers are in [`benchmark/tasks/evals.json`](benchmark/tasks/evals.json). More tasks are the most wanted contribution.
+**Limits, stated plainly:** 8 tasks with one run per mode is still a small sample. Token counts are estimates from the bundled [`token_meter.py`](plugins/distill/skills/distill/scripts/token_meter.py) heuristic (install `tiktoken` for a closer proxy). Prompts and expected answers are in [`benchmark/tasks/evals.json`](benchmark/tasks/evals.json). More tasks are the most wanted contribution.
 
 ### Measure your own savings
 
@@ -133,7 +138,7 @@ python plugins/distill/skills/distill/scripts/token_meter.py before.txt after.tx
 The accuracy guard forbids shortening code, paths, errors, numbers, negations and caveats that change what you do. Each reply also runs a self-check: "can the reader act without a follow-up question?" If not, the missing fact is added back.
 
 **How is this different from caveman?**
-Same goal, different voice and scope. caveman shortens words and drops grammar. distill keeps grammatical, professional fragments and also trims tool use. On the benchmark it used 39% fewer tokens than caveman.
+Same goal, different voice and scope. caveman shortens words and drops grammar. distill keeps grammatical, professional fragments and also trims tool use. On the benchmark it used 41% fewer tokens than caveman.
 
 **Does it change my code or commit messages?**
 No. Anything you ship (code, commits, PRs, docs, emails) is written at normal quality.

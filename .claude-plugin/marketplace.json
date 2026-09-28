@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "distill: a professional low-token mode for Claude (a benchmarked alternative to caveman).",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "plugins": [
     {

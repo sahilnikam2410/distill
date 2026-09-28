@@ -1,10 +1,10 @@
 {
   "name": "distill",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Professional low-token mode for Claude. Cuts reply and tool-use tokens while keeping code, paths, errors, numbers and warnings exact.",
   "author": {
     "name": "Sahil Nikam"
   },
   "license": "MIT",
-  "keywords": ["tokens", "concise", "caveman", "efficiency", "skill"]
+  "keywords": ["tokens", "concise", "caveman", "efficiency", "skill", "claude-code", "token-saving", "prompt-engineering"]
 }

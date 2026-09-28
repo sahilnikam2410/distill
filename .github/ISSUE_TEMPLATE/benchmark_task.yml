@@ -1,0 +1,22 @@
+name: Benchmark task
+description: Propose a task for the benchmark
+labels: [benchmark]
+body:
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Prompt
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected answer
+      description: What a correct reply must contain. This is how answers are graded.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What it tests
+      description: e.g. agentic multi-file work, a negation that must survive, a security warning.

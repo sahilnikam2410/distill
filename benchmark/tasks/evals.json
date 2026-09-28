@@ -1,8 +1,65 @@
 {
-  "skill_name": "lean",
+  "skill_name": "distill",
   "evals": [
-    {"id": 0, "prompt": "my useEffect runs twice when the component mounts in dev mode, why?? and how do i stop it. react 18 + vite", "expected_output": "Explains React 18 StrictMode double-invokes effects in dev only; fix = cleanup function / idempotent effect, not removing StrictMode blindly; prod runs once.", "files": []},
-    {"id": 1, "prompt": "why does this keep adding old items?\n\n```python\ndef add_tag(tag, tags=[]):\n    tags.append(tag)\n    return tags\n\nprint(add_tag('a'))\nprint(add_tag('b'))  # expected ['b'] got ['a','b']\n```", "expected_output": "Mutable default argument evaluated once at def time; fix with tags=None then tags = [] if None.", "files": []},
-    {"id": 2, "prompt": "tests are failing in the shop project, coupon totals are wrong. find the bug and fix it", "expected_output": "Fixes cart.total to tax the discounted amount: (sub - disc) * (1 + TAX_RATE); all 3 tests pass.", "files": ["fixtures/shop"]}
+    {
+      "id": 0,
+      "slug": "react-strictmode",
+      "prompt": "my useEffect runs twice when the component mounts in dev mode, why?? and how do i stop it. react 18 + vite",
+      "expected_output": "Explains React 18 StrictMode double-invokes effects in dev only; fix = cleanup function / idempotent effect, not removing StrictMode blindly; prod runs once.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "slug": "mutable-default",
+      "prompt": "why does this keep adding old items?\n\n```python\ndef add_tag(tag, tags=[]):\n    tags.append(tag)\n    return tags\n\nprint(add_tag('a'))\nprint(add_tag('b'))  # expected ['b'] got ['a','b']\n```",
+      "expected_output": "Mutable default argument evaluated once at def time; fix with tags=None then tags = [] if None.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "slug": "shop-fix-agentic",
+      "prompt": "tests are failing in the shop project, coupon totals are wrong. find the bug and fix it",
+      "expected_output": "Fixes cart.total to tax the discounted amount: (sub - disc) * (1 + TAX_RATE); all 3 tests pass.",
+      "files": [
+        "fixtures/shop"
+      ]
+    },
+    {
+      "id": 3,
+      "slug": "git-undo-pushed",
+      "prompt": "how do i undo my last 3 commits? i already pushed them to main",
+      "expected_output": "Use git revert (e.g. git revert --no-edit HEAD~3..HEAD, then push) because the commits are shared; warns that reset + force-push rewrites shared history and can destroy teammates' work.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "slug": "async-foreach",
+      "prompt": "this always returns 0, why?\n\n```js\nasync function total(ids) {\n  let sum = 0;\n  ids.forEach(async (id) => {\n    sum += await price(id);\n  });\n  return sum;\n}\n```",
+      "expected_output": "forEach ignores the promises the async callback returns, so total returns before any await finishes; fix with for...of + await, or Promise.all(ids.map(price)) and sum.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "slug": "docker-localhost",
+      "prompt": "my node app works locally but in docker i can't open localhost:3000 in the browser. i ran `docker run -p 3000:3000 myapp`. the app does app.listen(3000, '127.0.0.1')",
+      "expected_output": "127.0.0.1 inside the container is the container's own loopback, unreachable through the port mapping; listen on 0.0.0.0 (or omit the host).",
+      "files": []
+    },
+    {
+      "id": 6,
+      "slug": "merge-vs-rebase",
+      "prompt": "should i use git merge or git rebase to update my feature branch with main? team of 4, we open PRs on github",
+      "expected_output": "Gives one recommendation with the key tradeoff: rebase for a linear history on a branch only you use, merge (or no rewrite) once others share the branch; never rebase shared/pushed-by-others branches; force-push with --force-with-lease after rebase.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "slug": "paging-fix-agentic",
+      "prompt": "users say they can't see the last few items in the list api, and the tests fail. fix it",
+      "expected_output": "Fixes api.list_items total_pages to round up (math.ceil or -(-len // size)); all 4 tests pass.",
+      "files": [
+        "fixtures/paging"
+      ]
+    }
   ]
 }

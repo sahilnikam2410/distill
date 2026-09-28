@@ -1,0 +1,26 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Tag matches plugin version
+        run: |
+          version=$(python -c "import json; print(json.load(open('plugins/distill/.claude-plugin/plugin.json'))['version'])")
+          test "v$version" = "$GITHUB_REF_NAME" || { echo "tag $GITHUB_REF_NAME != plugin version $version"; exit 1; }
+      - run: python scripts/build_skill.py --check
+      - name: Publish release with distill.skill
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" distill.skill --title "$GITHUB_REF_NAME" --generate-notes
